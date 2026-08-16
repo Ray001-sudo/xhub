@@ -5,7 +5,7 @@ import type { CatalogQuery, CatalogResult, SortOption, VideoClip } from "./types
 // Configuration — Eporner API v2
 // -----------------------------------------------------------------------------
 const BASE_URL = "https://www.eporner.com/api/v2";
-const REVALIDATE_SECONDS = Number(process.env.REVALIDATE_SECONDS ?? 3600);
+const REVALIDATE_SECONDS = Number(process.env.REVALIDATE_SECONDS ?? 300);
 
 // Only ever render iframes from these hosts.
 const ALLOWED_EMBED_HOSTS = new Set(
@@ -220,7 +220,7 @@ export async function getCatalog(query: CatalogQuery): Promise<CatalogResult> {
       query: searchQuery,
       per_page: pageSize,
       page,
-      thumbsize: "big",
+      thumbsize: "medium",
       order: sortToApiOrdering(sort),
       gay: 0,
       lq: 1,
@@ -270,7 +270,7 @@ export async function getRelatedClips(tags: string[], excludeSlug: string): Prom
       query: tags.slice(0, 2).join(" "),
       per_page: 30,
       order: "most-popular",
-      thumbsize: "big",
+      thumbsize: "medium",
       gay: 0,
       lq: 1,
       format: "json",
@@ -298,7 +298,7 @@ export async function getAllSlugsForSitemap(
       query: "all",
       per_page: Math.min(limit, 100),
       order: "most-popular",
-      thumbsize: "big",
+      thumbsize: "medium",
       gay: 0,
       lq: 1,
       format: "json",

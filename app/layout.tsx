@@ -31,6 +31,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${body.variable} ${mono.variable} dark`}>
+      <head>
+        <link rel="dns-prefetch" href="https://eporner.com" />
+        <link rel="preconnect" href="https://eporner.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.eporner.com" />
+        <link rel="preconnect" href="https://www.eporner.com" crossOrigin="anonymous" />
+      </head>
       <body className="min-h-screen bg-[#0B0B0C] font-body text-white antialiased flex flex-col selection:bg-[#FF9900] selection:text-black">
         {/* Zero-CLS Age Verification Gate Modal */}
         <AgeVerificationModal />
