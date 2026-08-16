@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import type { VideoClip } from "@/lib/types";
 import { formatViewCount } from "@/lib/utils";
@@ -25,6 +26,8 @@ export function VideoCard({ clip, priority = false }: VideoCardProps) {
   const [frameIndex, setFrameIndex] = useState(0);
   const { isFavorite, toggleFavorite, isLoaded } = useFavorites();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const prefetchTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const router = useRouter();
 
   const favorited = isLoaded && isFavorite(clip.id);
 
@@ -42,8 +45,21 @@ export function VideoCard({ clip, priority = false }: VideoCardProps) {
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
+      if (prefetchTimerRef.current) clearTimeout(prefetchTimerRef.current);
     };
   }, [isHovered]);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    prefetchTimerRef.current = setTimeout(() => {
+      router.prefetch(`/watch/${clip.slug}`);
+    }, 100);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    if (prefetchTimerRef.current) clearTimeout(prefetchTimerRef.current);
+  };
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -57,9 +73,10 @@ export function VideoCard({ clip, priority = false }: VideoCardProps) {
     <div className="group relative flex flex-col overflow-hidden rounded-xl border border-zinc-800 bg-[#161618] transition-all duration-300 hover:border-[#FF9900]/50 hover:bg-[#222225] hover:shadow-lg hover:shadow-[#FF9900]/10">
       <Link
         href={`/watch/${clip.slug}`}
+        prefetch={true}
         className="block relative w-full"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         {/* 16:9 Aspect Ratio Thumbnail Container */}
         <div className="relative aspect-video w-full overflow-hidden bg-zinc-900">

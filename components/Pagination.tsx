@@ -61,6 +61,7 @@ export function Pagination({ currentPage, totalPages, q, tag, sort }: Pagination
       {currentPage > 1 ? (
         <Link
           href={createPageUrl(currentPage - 1)}
+          prefetch={true}
           className="flex h-10 items-center justify-center rounded-lg border border-zinc-800 bg-[#161618] px-4 text-sm font-semibold text-zinc-300 transition-colors hover:border-[#FF9900] hover:text-[#FF9900]"
         >
           &larr; Prev
@@ -76,6 +77,7 @@ export function Pagination({ currentPage, totalPages, q, tag, sort }: Pagination
         <>
           <Link
             href={createPageUrl(1)}
+            prefetch={true}
             className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-800 bg-[#161618] text-sm font-semibold text-zinc-300 transition-colors hover:border-[#FF9900] hover:text-[#FF9900]"
           >
             1
@@ -89,6 +91,7 @@ export function Pagination({ currentPage, totalPages, q, tag, sort }: Pagination
         <Link
           key={page}
           href={createPageUrl(page)}
+          prefetch={true}
           className={`flex h-10 w-10 items-center justify-center rounded-lg border text-sm font-semibold transition-colors ${
             page === currentPage
               ? "border-[#FF9900] bg-[#FF9900]/10 text-[#FF9900]"
@@ -105,6 +108,7 @@ export function Pagination({ currentPage, totalPages, q, tag, sort }: Pagination
           {pages[pages.length - 1] < totalPages - 1 && <span className="text-zinc-500">...</span>}
           <Link
             href={createPageUrl(totalPages)}
+            prefetch={true}
             className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-800 bg-[#161618] text-sm font-semibold text-zinc-300 transition-colors hover:border-[#FF9900] hover:text-[#FF9900]"
           >
             {totalPages}
@@ -116,6 +120,7 @@ export function Pagination({ currentPage, totalPages, q, tag, sort }: Pagination
       {currentPage < totalPages ? (
         <Link
           href={createPageUrl(currentPage + 1)}
+          prefetch={true}
           className="flex h-10 items-center justify-center rounded-lg border border-zinc-800 bg-[#161618] px-4 text-sm font-semibold text-zinc-300 transition-colors hover:border-[#FF9900] hover:text-[#FF9900]"
         >
           Next &rarr;

@@ -61,6 +61,30 @@ export function InfiniteCatalogGrid({
     }
   }, [hasNextPage, isLoading, page, search, sort, tag]);
 
+  // Pre-fetch Page N+1 when idle
+  useEffect(() => {
+    if (!hasNextPage || isLoading) return;
+    
+    const prefetchNextPage = () => {
+      const nextPage = page + 1;
+      const params = new URLSearchParams({
+        page: String(nextPage),
+        q: search,
+        tag,
+        sort,
+      });
+      // Background non-blocking fetch to populate browser HTTP cache
+      fetch(`/api/search?${params.toString()}`, { priority: "low" }).catch(() => {});
+    };
+
+    if (typeof window !== "undefined" && 'requestIdleCallback' in window) {
+      requestIdleCallback(prefetchNextPage);
+    } else {
+      const timeoutId = setTimeout(prefetchNextPage, 2000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [page, hasNextPage, isLoading, search, sort, tag]);
+
   useEffect(() => {
     if (!isInfiniteMode) return;
     

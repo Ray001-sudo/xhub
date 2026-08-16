@@ -20,6 +20,7 @@ export function TagCloud({ tags, activeTag, className = "", limit }: TagCloudPro
           <Link
             key={tag}
             href={isActive ? "/catalog" : `/catalog?tag=${encodeURIComponent(tag)}`}
+            prefetch={true}
             className={`rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${
               isActive
                 ? "bg-[#FF9900] text-black shadow-md shadow-[#FF9900]/20"
