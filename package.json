@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "open-next-cloudflare build",
+    "build": "next build",
+    "build:cf": "open-next-cloudflare build",
     "start": "next start",
-    "lint": "next lint",
-    "deploy": "open-next-cloudflare build && wrangler deploy"
+    "lint": "next lint"
   },
   "dependencies": {
     "next": "^16.3.1",
@@ -23,6 +23,6 @@
     "postcss": "8.4.38",
     "tailwindcss": "3.4.4",
     "typescript": "5.4.5",
-    "wrangler": "^3.100.0"
+    "wrangler": "^4.86.0"
   }
 }
