@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useFavorites } from "@/hooks/useFavorites";
 
-export function HeaderNav() {
+function HeaderNavContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { count, isLoaded } = useFavorites();
@@ -107,6 +107,14 @@ export function HeaderNav() {
         </nav>
       </div>
     </header>
+  );
+}
+
+export function HeaderNav() {
+  return (
+    <Suspense fallback={null}>
+      <HeaderNavContent />
+    </Suspense>
   );
 }
 
