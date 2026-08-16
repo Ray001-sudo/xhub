@@ -6,7 +6,7 @@ import { TagCloud } from "@/components/TagCloud";
 import { VideoGrid } from "@/components/VideoGrid";
 
 export const metadata: Metadata = {
-  title: "XHub HD — Free HD Adult Videos & High-Density Media Portal",
+  title: "XHub HD — Free HD Adult Videos & High-Density Media Site",
   description:
     "Watch thousands of free high-quality HD adult videos on XHub HD. Ultra-dense grid, fast streaming, interactive frame previews, and no sign-up required.",
 };
@@ -30,7 +30,7 @@ export default async function HomePage() {
               <span className="flex h-6 w-6 items-center justify-center rounded bg-[#FF9900] text-black font-mono text-xs font-bold">
                 X
               </span>
-              XHub HD Media Portal
+              XHub HD Media Site
             </h1>
             <p className="mt-1 text-xs text-zinc-400">
               High-density adult video directory · 100% free · Instant 1080p playback
