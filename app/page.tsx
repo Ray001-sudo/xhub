@@ -15,8 +15,8 @@ export const revalidate = 3600;
 
 export default async function HomePage() {
   const [popular, newest, tags] = await Promise.all([
-    getCatalog({ page: 1, pageSize: 24, sort: "popular" }),
-    getCatalog({ page: 1, pageSize: 12, sort: "newest" }),
+    getCatalog({ page: 1, pageSize: 60, sort: "popular" }),
+    getCatalog({ page: 1, pageSize: 24, sort: "newest" }),
     getTags(),
   ]);
 

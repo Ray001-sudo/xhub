@@ -268,7 +268,7 @@ export async function getRelatedClips(tags: string[], excludeSlug: string): Prom
   try {
     const data = await apiFetch<EpornerSearchResponse>("/video/search/", {
       query: tags.slice(0, 2).join(" "),
-      per_page: 9,
+      per_page: 30,
       order: "most-popular",
       thumbsize: "big",
       gay: 0,
@@ -277,8 +277,7 @@ export async function getRelatedClips(tags: string[], excludeSlug: string): Prom
     });
     return (data.videos || [])
       .map(normalizeClip)
-      .filter((c) => c.slug !== excludeSlug)
-      .slice(0, 8);
+      .filter((c) => c.slug !== excludeSlug);
   } catch (err) {
     console.error("[clips-api] getRelatedClips failed:", err);
     return [];
