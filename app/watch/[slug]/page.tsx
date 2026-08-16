@@ -14,11 +14,12 @@ import AdsterraRectangle from "@/components/AdsterraRectangle";
 export const revalidate = 3600;
 
 interface WatchPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({ params }: WatchPageProps): Promise<Metadata> {
-  const slug = sanitizeSlugParam(params.slug);
+  const resolvedParams = await params;
+  const slug = sanitizeSlugParam(resolvedParams.slug);
   const clip = await getClipBySlug(slug);
   if (!clip) return { title: "Video Not Found" };
 
@@ -31,7 +32,8 @@ export async function generateMetadata({ params }: WatchPageProps): Promise<Meta
 }
 
 export default async function WatchPage({ params }: WatchPageProps) {
-  const slug = sanitizeSlugParam(params.slug);
+  const resolvedParams = await params;
+  const slug = sanitizeSlugParam(resolvedParams.slug);
   const clip = await getClipBySlug(slug);
   if (!clip) notFound();
 

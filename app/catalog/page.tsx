@@ -14,12 +14,13 @@ export const revalidate = 3600;
 const PAGE_SIZE = 60;
 
 interface CatalogPageProps {
-  searchParams: { q?: string; tag?: string; sort?: string; page?: string };
+  searchParams: Promise<{ q?: string; tag?: string; sort?: string; page?: string }>;
 }
 
-export function generateMetadata({ searchParams }: CatalogPageProps): Metadata {
-  const search = sanitizeSearchTerm(searchParams.q);
-  const tag = sanitizeTagParam(searchParams.tag);
+export async function generateMetadata({ searchParams }: CatalogPageProps): Promise<Metadata> {
+  const resolvedSearchParams = await searchParams;
+  const search = sanitizeSearchTerm(resolvedSearchParams.q);
+  const tag = sanitizeTagParam(resolvedSearchParams.tag);
   const parts = ["Free HD Video Catalog", "XHub HD"];
   if (tag) parts.unshift(tag);
   if (search) parts.unshift(`"${search}"`);
@@ -35,10 +36,11 @@ export function generateMetadata({ searchParams }: CatalogPageProps): Metadata {
 }
 
 export default async function CatalogPage({ searchParams }: CatalogPageProps) {
-  const search = sanitizeSearchTerm(searchParams.q);
-  const tag = sanitizeTagParam(searchParams.tag);
-  const sort = sanitizeSort(searchParams.sort);
-  const pageNum = Math.max(1, Number.parseInt(searchParams.page || "1", 10));
+  const resolvedSearchParams = await searchParams;
+  const search = sanitizeSearchTerm(resolvedSearchParams.q);
+  const tag = sanitizeTagParam(resolvedSearchParams.tag);
+  const sort = sanitizeSort(resolvedSearchParams.sort);
+  const pageNum = Math.max(1, Number.parseInt(resolvedSearchParams.page || "1", 10));
 
   const [catalog, tags] = await Promise.all([
     getCatalog({ page: pageNum, pageSize: PAGE_SIZE, search, tag, sort }),
