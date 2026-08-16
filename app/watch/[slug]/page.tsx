@@ -5,11 +5,10 @@ import { getClipBySlug, getRelatedClips } from "@/lib/api";
 import { sanitizeSlugParam, formatViewCount } from "@/lib/utils";
 import { generateVideoObjectSchema, generatePageMetadata } from "@/lib/seo";
 import { VideoPlayer } from "@/components/VideoPlayer";
-import { AdSlot } from "@/components/AdSlot";
 import { VideoCard } from "@/components/VideoCard";
 import { TagCloud } from "@/components/TagCloud";
 import { AutoplayToggle } from "@/components/AutoplayToggle";
-import { DynamicAdGrid } from "@/components/DynamicAdGrid";
+import { VideoGrid } from "@/components/VideoGrid";
 
 export const revalidate = 3600;
 
@@ -61,13 +60,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         {/* Left Column: Player & Metadata */}
         <div className="flex flex-col gap-4">
-          {/* Player flanked by 300x250 ad units on Desktop */}
           <div className="flex flex-col gap-4 xl:flex-row xl:items-start">
-            {/* Desktop Left Ad Sidebar (300x250) */}
-            <AdSlot
-              name="player-sidebar-left"
-              className="hidden xl:flex shrink-0 w-[300px]"
-            />
 
             {/* Video Player */}
             <div className="min-w-0 flex-1 flex flex-col gap-4">
@@ -108,18 +101,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
                   <TagCloud tags={clip.tags} />
                 </div>
               )}
-
-              {/* Below Player Native Ad Slot */}
-              <div className="pt-2">
-                <AdSlot name="below-player-native" />
-              </div>
             </div>
-
-            {/* Desktop Right Ad Sidebar (300x250) */}
-            <AdSlot
-              name="player-sidebar-right"
-              className="hidden xl:flex shrink-0 w-[300px]"
-            />
           </div>
         </div>
 
@@ -133,7 +115,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
           </div>
 
           <div>
-            <DynamicAdGrid items={related} frequency={6} adFormat="native" />
+            <VideoGrid items={related} />
           </div>
         </aside>
       </div>

@@ -2,9 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getCatalog, getTags } from "@/lib/api";
 import { VideoCard } from "@/components/VideoCard";
-import { AdSlot } from "@/components/AdSlot";
 import { TagCloud } from "@/components/TagCloud";
-import { DynamicAdGrid } from "@/components/DynamicAdGrid";
+import { VideoGrid } from "@/components/VideoGrid";
 
 export const metadata: Metadata = {
   title: "XHub HD — Free HD Adult Videos & High-Density Media Portal",
@@ -73,15 +72,10 @@ export default async function HomePage() {
         </div>
 
         {/* Ultra-Dense Grid Layout */}
-        <DynamicAdGrid items={newest.items} frequency={6} adFormat="native" />
+        <VideoGrid items={newest.items} />
       </section>
 
-      {/* In-Content Native Ad Placement */}
-      <div className="my-2">
-        <AdSlot name="in-grid-native" />
-      </div>
-
-      {/* Most Popular Video Catalog Grid with Native Ad Injections */}
+      {/* Most Popular Video Catalog Grid */}
       <section className="flex flex-col gap-4">
         <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
           <div className="flex items-center gap-2">
@@ -105,7 +99,7 @@ export default async function HomePage() {
         </div>
 
         {/* Dense Grid */}
-        <DynamicAdGrid items={popular.items} frequency={12} adFormat="native" />
+        <VideoGrid items={popular.items} />
       </section>
     </div>
   );

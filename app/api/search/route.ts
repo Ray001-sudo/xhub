@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCatalog } from "@/lib/api";
 import { sanitizePage, sanitizeSearchTerm, sanitizeSort, sanitizeTagParam } from "@/lib/utils";
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 60;
 
 /**
  * GET /api/search
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
 
   const page = sanitizePage(params.get("page") ?? undefined);
-  const search = sanitizeSearchTerm(params.get("search") ?? undefined);
+  const search = sanitizeSearchTerm(params.get("q") ?? undefined);
   const tag = sanitizeTagParam(params.get("tag") ?? undefined);
   const sort = sanitizeSort(params.get("sort") ?? undefined);
 

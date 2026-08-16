@@ -25,7 +25,7 @@ const CLIP_EMBED_HOSTS = (process.env.ALLOWED_IFRAME_HOSTS ?? "")
   .filter(Boolean)
   .map((host) => `https://${host}`);
 
-const CLIP_IMAGE_HOSTS = ["https://cdn.esports-vods.tv", "https://media.gaming-statics.com"];
+const CLIP_IMAGE_HOSTS = ["https://cdn.esports-vods.tv", "https://media.gaming-statics.com", "https://*.eporner.com"];
 const AD_SCRIPT_HOSTS = [
   "https://ad-delivery.esports-network.com",
   "https://analytics.gaming-tracker.com",
@@ -76,6 +76,7 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "cdn.esports-vods.tv" },
       { protocol: "https", hostname: "media.gaming-statics.com" },
+      { protocol: "https", hostname: "**.eporner.com" },
     ],
   },
   async headers() {

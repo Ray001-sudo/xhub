@@ -2,42 +2,22 @@ import "server-only";
 import type { CatalogQuery, CatalogResult, SortOption, VideoClip } from "./types";
 
 // -----------------------------------------------------------------------------
-// Configuration — Decentralized Esports VOD & Clip Network
+// Configuration — Eporner API v2
 // -----------------------------------------------------------------------------
-const BASE_URL = process.env.CLIPS_API_BASE_URL ?? "https://api.esports-vods.tv/v1";
-const API_KEY = process.env.CLIPS_API_KEY ?? "";
+const BASE_URL = "https://www.eporner.com/api/v2";
 const REVALIDATE_SECONDS = Number(process.env.REVALIDATE_SECONDS ?? 3600);
 
-if (!API_KEY && process.env.NODE_ENV === "production") {
-  console.warn(
-    "[clips-api] CLIPS_API_KEY is not set. Requests to the partner API will fail. " +
-      "Set it in your environment (see .env.example)."
-  );
-}
-
-// Only ever render iframes from these hosts. This is the single choke point
-// that keeps the `iframe_embed` string returned by the partner API from
-// becoming an XSS vector — see sanitizeEmbedHtml() below and
-// components/VideoPlayer.tsx for how the result is consumed.
-//
-// Driven entirely by ALLOWED_IFRAME_HOSTS (comma-separated hostnames, no
-// protocol — e.g. "embed.esports-vods.tv,player.clip-network.com") so
-// staging/production can point at different partner domains without code
-// changes. Deliberately fails CLOSED: if the env var is unset or empty, no
-// host is trusted and every embed is rejected — that's a broken embed on
-// screen, not a silent hole in the allow-list.
-//
-// IMPORTANT: `next.config.js` reads the *same* env var to build the CSP
-// `frame-src` directive. Keep both pointed at ALLOWED_IFRAME_HOSTS — CSP is
-// defense-in-depth on top of this allow-list, not a replacement for it, and
-// a browser without a strictly-enforced CSP still relies on this check
-// happening server-side before the URL ever reaches JSX.
+// Only ever render iframes from these hosts.
 const ALLOWED_EMBED_HOSTS = new Set(
   (process.env.ALLOWED_IFRAME_HOSTS ?? "")
     .split(",")
     .map((host) => host.trim().toLowerCase())
     .filter(Boolean)
 );
+
+// Add eporner to allowed hosts
+ALLOWED_EMBED_HOSTS.add("www.eporner.com");
+ALLOWED_EMBED_HOSTS.add("eporner.com");
 
 if (ALLOWED_EMBED_HOSTS.size === 0) {
   console.warn(
@@ -77,7 +57,9 @@ async function apiFetch<T>(
   params: Record<string, string | number | undefined> = {},
   { revalidateSeconds = REVALIDATE_SECONDS, retries = 2 }: FetchOptions = {}
 ): Promise<T> {
-  const url = new URL(path, BASE_URL);
+  // Ensure path starts with /
+  const endpoint = path.startsWith("/") ? path : `/${path}`;
+  const url = new URL(`${BASE_URL}${endpoint}`);
   for (const [k, v] of Object.entries(params)) {
     if (v !== undefined && v !== "") url.searchParams.set(k, String(v));
   }
@@ -86,13 +68,9 @@ async function apiFetch<T>(
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const res = await fetch(url.toString(), {
-        // Next.js ISR: cache the response at the edge/server and
-        // transparently revalidate after N seconds instead of hitting the
-        // upstream API on every request.
         next: { revalidate: revalidateSeconds },
         headers: {
           Accept: "application/json",
-          Authorization: `Bearer ${API_KEY}`,
         },
       });
 
@@ -126,20 +104,6 @@ function sleep(ms: number) {
 // -----------------------------------------------------------------------------
 // Embed sanitization
 // -----------------------------------------------------------------------------
-
-/**
- * Extracts the `src` from a raw <iframe> HTML string returned by the
- * partner API and validates it against ALLOWED_EMBED_HOSTS. Returns null if
- * the string is missing, malformed, not HTTPS, or points at an untrusted
- * host. This is the ONLY function in the codebase allowed to parse
- * `embedHtml` — nothing downstream should regex or string-match it again.
- *
- * We deliberately do NOT pass the raw HTML through — even after validating
- * the host, we rebuild a plain URL and let VideoPlayer.tsx construct its own
- * <iframe> with a locked-down `sandbox` attribute. The partner's original
- * frameborder/width/height/allowfullscreen attributes are never trusted or
- * reused.
- */
 export function sanitizeEmbedHtml(rawHtml: string | null | undefined): string | null {
   if (!rawHtml) return null;
 
@@ -173,50 +137,64 @@ function idFromSlug(slug: string): string {
 }
 
 // -----------------------------------------------------------------------------
-// Esports VOD & Clip Network response shapes + normalizer
+// Eporner API v2 response shapes + normalizer
 // -----------------------------------------------------------------------------
-interface EsportsClipRaw {
-  clip_id: string;
+interface EpornerVideoRaw {
+  id: string;
   title: string;
-  thumb_url: string;
-  iframe_embed: string;
-  duration_formatted: string;
-  user_rating: string;
-  total_views: number;
-  categories?: { category_name: string }[];
+  url: string;
+  embed: string;
+  length_sec: number;
+  rate: string;
+  views: number;
+  default_thumb: { src: string };
+  thumbs: { src: string }[];
+  keywords: string;
 }
 
-interface EsportsListResponse {
-  total: number;
-  clips: EsportsClipRaw[];
+interface EpornerSearchResponse {
+  count: number;
+  start: number;
+  total_count: number;
+  total_pages: number;
+  videos: EpornerVideoRaw[];
 }
 
 function sortToApiOrdering(sort: SortOption | undefined): string {
   switch (sort) {
     case "newest":
-      return "recent";
+      return "latest";
     case "top-rated":
-      return "rating";
+      return "top-rated";
     case "alphabetical":
-      return "title";
+      return "most-popular"; // Alphabetical is not supported, map to most-popular
     case "popular":
     default:
-      return "views";
+      return "most-popular";
   }
 }
 
-function normalizeClip(raw: EsportsClipRaw): VideoClip {
+function formatDuration(seconds: number): string {
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${m}:${s.toString().padStart(2, "0")}`;
+}
+
+function normalizeClip(raw: EpornerVideoRaw): VideoClip {
+  // Synthetic iframe HTML maintaining a 16:9 aspect ratio
+  const syntheticEmbedHtml = `<iframe src="${raw.embed}" style="aspect-ratio: 16 / 9; width: 100%; height: 100%;" frameborder="0" allowfullscreen></iframe>`;
+  
   return {
-    id: raw.clip_id,
-    slug: slugify(raw.title, raw.clip_id),
+    id: raw.id,
+    slug: slugify(raw.title, raw.id),
     title: raw.title,
-    thumbnailUrl: raw.thumb_url,
-    embedHtml: raw.iframe_embed,
-    embedUrl: sanitizeEmbedHtml(raw.iframe_embed),
-    duration: raw.duration_formatted,
-    rating: raw.user_rating,
-    views: raw.total_views,
-    tags: raw.categories?.map((c) => c.category_name) ?? [],
+    thumbnailUrl: raw.default_thumb?.src || "",
+    embedHtml: syntheticEmbedHtml,
+    embedUrl: raw.embed,
+    duration: formatDuration(raw.length_sec),
+    rating: raw.rate ? `${raw.rate}%` : "", // Assuming rate is like "98"
+    views: raw.views,
+    tags: raw.keywords ? raw.keywords.split(",").map((k) => k.trim()).filter(Boolean) : [],
   };
 }
 
@@ -228,28 +206,41 @@ function normalizeClip(raw: EsportsClipRaw): VideoClip {
 export async function getCatalog(query: CatalogQuery): Promise<CatalogResult> {
   const { page, pageSize, search, tag, sort } = query;
 
+  let searchQuery = "all";
+  if (search && tag) {
+    searchQuery = `${search} ${tag}`;
+  } else if (search) {
+    searchQuery = search;
+  } else if (tag) {
+    searchQuery = tag;
+  }
+
   try {
-    const data = await apiFetch<EsportsListResponse>("/clips", {
+    const data = await apiFetch<EpornerSearchResponse>("/video/search/", {
+      query: searchQuery,
+      per_page: pageSize,
       page,
-      page_size: pageSize,
-      q: search?.slice(0, 100), // hard cap to prevent abuse via huge query strings
-      category: tag,
-      sort: sortToApiOrdering(sort),
+      thumbsize: "big",
+      order: sortToApiOrdering(sort),
+      gay: 0,
+      lq: 1,
+      format: "json",
     });
 
-    const items = data.clips.map(normalizeClip);
+    const items = (data.videos || []).map(normalizeClip);
     return {
       items,
       page,
       pageSize,
-      totalCount: data.total,
-      hasNextPage: page * pageSize < data.total,
+      totalCount: data.total_count,
+      totalPages: data.total_pages,
+      hasNextPage: page < data.total_pages,
     };
   } catch (err) {
     console.error("[clips-api] getCatalog failed:", err);
     // Graceful degradation: an empty catalog page (with a friendly empty
     // state) beats a hard 500 for a public discovery surface.
-    return { items: [], page, pageSize, totalCount: 0, hasNextPage: false };
+    return { items: [], page, pageSize, totalCount: 0, totalPages: 0, hasNextPage: false };
   }
 }
 
@@ -257,7 +248,13 @@ export async function getCatalog(query: CatalogQuery): Promise<CatalogResult> {
 export async function getClipBySlug(slug: string): Promise<VideoClip | null> {
   const id = idFromSlug(slug);
   try {
-    const raw = await apiFetch<EsportsClipRaw>(`/clips/${encodeURIComponent(id)}`, {});
+    // Note: ID lookup uses a different response shape (just the object)
+    const raw = await apiFetch<EpornerVideoRaw>(`/video/id/`, {
+      id,
+      format: "json",
+    });
+    // Eporner may return an empty array or object if not found
+    if (!raw || Object.keys(raw).length === 0 || Array.isArray(raw)) return null;
     return normalizeClip(raw);
   } catch (err) {
     console.error(`[clips-api] getClipBySlug(${slug}) failed:`, err);
@@ -269,12 +266,16 @@ export async function getClipBySlug(slug: string): Promise<VideoClip | null> {
 export async function getRelatedClips(tags: string[], excludeSlug: string): Promise<VideoClip[]> {
   if (tags.length === 0) return [];
   try {
-    const data = await apiFetch<EsportsListResponse>("/clips", {
-      category: tags.slice(0, 2).join(","),
-      page_size: 9,
-      sort: "views",
+    const data = await apiFetch<EpornerSearchResponse>("/video/search/", {
+      query: tags.slice(0, 2).join(" "),
+      per_page: 9,
+      order: "most-popular",
+      thumbsize: "big",
+      gay: 0,
+      lq: 1,
+      format: "json",
     });
-    return data.clips
+    return (data.videos || [])
       .map(normalizeClip)
       .filter((c) => c.slug !== excludeSlug)
       .slice(0, 8);
@@ -284,19 +285,9 @@ export async function getRelatedClips(tags: string[], excludeSlug: string): Prom
   }
 }
 
-/** All distinct categories/tags, used to populate the filter bar. Cached for a day. */
+/** All distinct categories/tags, used to populate the filter bar. */
 export async function getTags(): Promise<string[]> {
-  try {
-    const data = await apiFetch<{ categories: { category_name: string }[] }>(
-      "/categories",
-      {},
-      { revalidateSeconds: 86400 }
-    );
-    return data.categories.map((c) => c.category_name);
-  } catch (err) {
-    console.error("[clips-api] getTags failed:", err);
-    return ["FPS", "MOBA", "Battle Royale", "Fighting", "Tournament", "Highlights"];
-  }
+  return ["4k", "hd", "top rated", "popular"];
 }
 
 /** Lightweight slug list for sitemap generation — no full payload needed. */
@@ -304,14 +295,34 @@ export async function getAllSlugsForSitemap(
   limit = 1000
 ): Promise<{ slug: string }[]> {
   try {
-    const data = await apiFetch<EsportsListResponse>(
-      "/clips",
-      { page_size: Math.min(limit, 40), sort: "views" },
-      { revalidateSeconds: 86400 }
-    );
-    return data.clips.map((c) => ({ slug: slugify(c.title, c.clip_id) }));
+    const data = await apiFetch<EpornerSearchResponse>("/video/search/", {
+      query: "all",
+      per_page: Math.min(limit, 100),
+      order: "most-popular",
+      thumbsize: "big",
+      gay: 0,
+      lq: 1,
+      format: "json",
+    });
+    return (data.videos || []).map((c) => ({ slug: slugify(c.title, c.id) }));
   } catch (err) {
     console.error("[clips-api] getAllSlugsForSitemap failed:", err);
+    return [];
+  }
+}
+
+/** Fetch removed video IDs for local database synchronization. */
+export async function getRemovedVideos(): Promise<{ id: string }[]> {
+  try {
+    const data = await apiFetch<any>("/video/removed/", { format: "json" });
+    if (Array.isArray(data)) {
+        return data.map(item => ({ id: typeof item === 'object' ? item.id : item }));
+    } else if (data && data.videos) {
+        return data.videos.map((item: any) => ({ id: item.id }));
+    }
+    return [];
+  } catch (err) {
+    console.error("[clips-api] getRemovedVideos failed:", err);
     return [];
   }
 }

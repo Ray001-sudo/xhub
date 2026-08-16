@@ -6,19 +6,19 @@ import { sanitizeSearchTerm, sanitizeSort, sanitizeTagParam } from "@/lib/utils"
 import { SearchFilters } from "@/components/SearchFilters";
 import { InfiniteCatalogGrid } from "@/components/InfiniteCatalogGrid";
 import { CatalogGridSkeleton } from "@/components/Skeletons";
-import { AdSlot } from "@/components/AdSlot";
 import { TagCloud } from "@/components/TagCloud";
+import { Pagination } from "@/components/Pagination";
 
 export const revalidate = 3600;
 
-const PAGE_SIZE = 24;
+const PAGE_SIZE = 60;
 
 interface CatalogPageProps {
-  searchParams: { search?: string; tag?: string; sort?: string; page?: string };
+  searchParams: { q?: string; tag?: string; sort?: string; page?: string };
 }
 
 export function generateMetadata({ searchParams }: CatalogPageProps): Metadata {
-  const search = sanitizeSearchTerm(searchParams.search);
+  const search = sanitizeSearchTerm(searchParams.q);
   const tag = sanitizeTagParam(searchParams.tag);
   const parts = ["Free HD Video Catalog", "XHub HD"];
   if (tag) parts.unshift(tag);
@@ -35,7 +35,7 @@ export function generateMetadata({ searchParams }: CatalogPageProps): Metadata {
 }
 
 export default async function CatalogPage({ searchParams }: CatalogPageProps) {
-  const search = sanitizeSearchTerm(searchParams.search);
+  const search = sanitizeSearchTerm(searchParams.q);
   const tag = sanitizeTagParam(searchParams.tag);
   const sort = sanitizeSort(searchParams.sort);
   const pageNum = Math.max(1, Number.parseInt(searchParams.page || "1", 10));
@@ -45,14 +45,8 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
     getTags(),
   ]);
 
-  const prevPageUrl = pageNum > 1 ? `/catalog?page=${pageNum - 1}${tag ? `&tag=${encodeURIComponent(tag)}` : ""}` : null;
-  const nextPageUrl = catalog.hasNextPage ? `/catalog?page=${pageNum + 1}${tag ? `&tag=${encodeURIComponent(tag)}` : ""}` : null;
-
   return (
     <div className="flex flex-col gap-6 py-2">
-      {/* Leaderboard Ad Placement */}
-      <AdSlot name="catalog-leaderboard" />
-
       {/* Catalog Header */}
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl">
@@ -85,26 +79,14 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
         />
       </Suspense>
 
-      {/* Crawlers / No-JS Fallback Pagination (<noscript>) */}
-      <noscript>
-        <div className="mt-8 flex items-center justify-center gap-4 py-4 border-t border-zinc-800">
-          {prevPageUrl ? (
-            <Link href={prevPageUrl} className="px-4 py-2 bg-[#FF9900] text-black font-bold rounded-lg">
-              ← Previous Page ({pageNum - 1})
-            </Link>
-          ) : (
-            <span className="px-4 py-2 text-zinc-600 border border-zinc-800 rounded-lg">← Previous Page</span>
-          )}
-          <span className="text-xs text-zinc-400 font-mono">Page {pageNum}</span>
-          {nextPageUrl ? (
-            <Link href={nextPageUrl} className="px-4 py-2 bg-[#FF9900] text-black font-bold rounded-lg">
-              Next Page ({pageNum + 1}) →
-            </Link>
-          ) : (
-            <span className="px-4 py-2 text-zinc-600 border border-zinc-800 rounded-lg">Next Page →</span>
-          )}
-        </div>
-      </noscript>
+      {/* Numbered Pagination */}
+      <Pagination 
+        currentPage={pageNum} 
+        totalPages={catalog.totalPages} 
+        q={search} 
+        tag={tag} 
+        sort={sort} 
+      />
     </div>
   );
 }
