@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { AdNativeBanner } from "./AdNativeBanner";
+import { AdBanner300x250 } from "./AdBanner300x250";
 
 export type AdSlotName =
   | "header-leaderboard"
@@ -57,6 +59,14 @@ export function AdSlot({
         </div>
       </div>
     );
+  }
+
+  if (name === "below-player-native" || name === "in-grid-native") {
+    return <AdNativeBanner />;
+  }
+
+  if (name === "player-sidebar-left" || name === "player-sidebar-right") {
+    return <AdBanner300x250 />;
   }
 
   return (

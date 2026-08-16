@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { HeaderNav } from "@/components/HeaderNav";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -57,6 +58,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Global Ad & Analytics Script Injection */}
         <GlobalAdScripts />
+
+        {/* Adsterra Global Scripts */}
+        <Script
+          src="https://pl30877897.effectivecpmnetwork.com/94/6e/2f/946e2f8aae708e136588e20b8bd33798.js"
+          strategy="afterInteractive"
+        />
+        <Script
+          src="https://pl30877900.effectivecpmnetwork.com/2f/40/62/2f4062e529e230649e9dfd5dab3fb5b2.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
