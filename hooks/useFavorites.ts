@@ -33,8 +33,8 @@ export function useFavorites() {
   useEffect(() => {
     loadFavorites();
 
-    const handleStorageChange = (e: StorageEvent | CustomEvent) => {
-      if ("key" in e && e.key !== STORAGE_KEY) return;
+    const handleStorageChange = (e: Event) => {
+      if ("key" in e && (e as StorageEvent).key !== STORAGE_KEY) return;
       loadFavorites();
     };
 
