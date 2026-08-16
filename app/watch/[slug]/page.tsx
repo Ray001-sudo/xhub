@@ -9,6 +9,7 @@ import { AdSlot } from "@/components/AdSlot";
 import { VideoCard } from "@/components/VideoCard";
 import { TagCloud } from "@/components/TagCloud";
 import { AutoplayToggle } from "@/components/AutoplayToggle";
+import { DynamicAdGrid } from "@/components/DynamicAdGrid";
 
 export const revalidate = 3600;
 
@@ -131,10 +132,8 @@ export default async function WatchPage({ params }: WatchPageProps) {
             </h2>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2">
-            {related.map((recommendedClip) => (
-              <VideoCard key={recommendedClip.id} clip={recommendedClip} />
-            ))}
+          <div>
+            <DynamicAdGrid items={related} frequency={6} adFormat="native" />
           </div>
         </aside>
       </div>

@@ -2,9 +2,8 @@
 
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import type { SortOption, VideoClip } from "@/lib/types";
-import { VideoCard } from "./VideoCard";
 import { GameCardSkeleton } from "./Skeletons";
-import { AdSlot } from "./AdSlot";
+import { DynamicAdGrid } from "./DynamicAdGrid";
 
 interface InfiniteCatalogGridProps {
   initialItems: VideoClip[];
@@ -84,23 +83,16 @@ export function InfiniteCatalogGrid({
 
   return (
     <div className="flex flex-col gap-6">
-      {/* High-density grid: Mobile 2, Tablet 3, Desktop 5, 1080p+ 6 */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
-        {items.map((clip, i) => (
-          <Fragment key={clip.id}>
-            <VideoCard clip={clip} priority={i < 6} />
-            {/* Native ad every 12 cards, blended into grid */}
-            {(i + 1) % 12 === 0 && (
-              <div className="col-span-full py-2">
-                <AdSlot name="in-grid-native" />
-              </div>
-            )}
-          </Fragment>
-        ))}
-        {isLoading &&
-          Array.from({ length: 6 }).map((_, i) => (
-            <GameCardSkeleton key={`skeleton-${i}`} />
-          ))}
+      {/* High-density grid */}
+      <div>
+        <DynamicAdGrid items={items} frequency={12} adFormat="native" />
+        {isLoading && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4 mt-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <GameCardSkeleton key={`skeleton-${i}`} />
+            ))}
+          </div>
+        )}
       </div>
 
       {hasNextPage && <div ref={sentinelRef} className="h-12 w-full" aria-hidden="true" />}

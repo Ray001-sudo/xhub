@@ -4,6 +4,7 @@ import { getCatalog, getTags } from "@/lib/api";
 import { VideoCard } from "@/components/VideoCard";
 import { AdSlot } from "@/components/AdSlot";
 import { TagCloud } from "@/components/TagCloud";
+import { DynamicAdGrid } from "@/components/DynamicAdGrid";
 
 export const metadata: Metadata = {
   title: "XHub HD — Free HD Adult Videos & High-Density Media Portal",
@@ -71,12 +72,8 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {/* Ultra-Dense Grid Layout: Mobile 2, Tablet 3, Desktop 5, 1080p+ 6 */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
-          {newest.items.map((clip, i) => (
-            <VideoCard key={clip.id} clip={clip} priority={i < 6} />
-          ))}
-        </div>
+        {/* Ultra-Dense Grid Layout */}
+        <DynamicAdGrid items={newest.items} frequency={6} adFormat="native" />
       </section>
 
       {/* In-Content Native Ad Placement */}
@@ -107,20 +104,8 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {/* Dense Grid: Mobile 2, Tablet 3, Desktop 5, 1080p+ 6 */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
-          {popular.items.map((clip, index) => (
-            <div key={clip.id} className="contents">
-              <VideoCard clip={clip} />
-              {/* Native ad every 12 cards inside grid */}
-              {(index + 1) % 12 === 0 && (
-                <div className="col-span-full py-2">
-                  <AdSlot name="in-grid-native" />
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+        {/* Dense Grid */}
+        <DynamicAdGrid items={popular.items} frequency={12} adFormat="native" />
       </section>
     </div>
   );
