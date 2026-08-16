@@ -51,6 +51,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Site Footer */}
         <SiteFooter />
+
+        {/* Adsterra Popunder */}
+        <Script
+          id="adsterra-popunder"
+          src="https://pl30877897.effectivecpmnetwork.com/94/6e/2f/946e2f8aae708e136588e20b8bd33798.js"
+          strategy="afterInteractive"
+        />
+
+        {/* Adsterra Social Bar */}
+        <Script
+          id="adsterra-socialbar"
+          src="https://pl30877900.effectivecpmnetwork.com/2f/40/62/2f4062e529e230649e9dfd5dab3fb5b2.js"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

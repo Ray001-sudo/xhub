@@ -4,11 +4,12 @@ import Link from "next/link";
 import { getClipBySlug, getRelatedClips } from "@/lib/api";
 import { sanitizeSlugParam, formatViewCount } from "@/lib/utils";
 import { generateVideoObjectSchema, generatePageMetadata } from "@/lib/seo";
-import { VideoPlayer } from "@/components/VideoPlayer";
+import VideoPlayerFacade from "@/components/VideoPlayerFacade";
 import { VideoCard } from "@/components/VideoCard";
 import { TagCloud } from "@/components/TagCloud";
 import { AutoplayToggle } from "@/components/AutoplayToggle";
 import { VideoGrid } from "@/components/VideoGrid";
+import AdsterraRectangle from "@/components/AdsterraRectangle";
 
 export const revalidate = 3600;
 
@@ -63,7 +64,13 @@ export default async function WatchPage({ params }: WatchPageProps) {
 
             {/* Video Player */}
             <div className="min-w-0 flex-1 flex flex-col gap-4">
-              <VideoPlayer clip={clip} />
+              {clip.embedUrl ? (
+                <VideoPlayerFacade embedUrl={clip.embedUrl} posterUrl={clip.thumbnailUrl} title={clip.title} />
+              ) : (
+                <div className="flex aspect-video w-full items-center justify-center rounded-xl border border-zinc-800 bg-black">
+                  <p className="font-mono text-sm text-zinc-500">Clip unavailable — embed could not be verified.</p>
+                </div>
+              )}
 
               {/* Title & Stats */}
               <div>
@@ -102,6 +109,9 @@ export default async function WatchPage({ params }: WatchPageProps) {
               )}
             </div>
         </div>
+        
+        {/* Adsterra Rectangle Ad */}
+        <AdsterraRectangle />
 
         {/* Recommended Videos Grid */}
         <section className="flex flex-col gap-4 mt-6">
