@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-zinc-800;
+  }
+  html {
+    color-scheme: dark;
+    background-color: #0B0B0C;
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: #0B0B0C;
+    color: #FFFFFF;
+    font-family: var(--font-body), system-ui, -apple-system, sans-serif;
+  }
+  body.modal-open {
+    overflow: hidden !important;
+    touch-action: none;
+  }
+  ::selection {
+    background-color: #FF9900;
+    color: #000000;
+  }
+  
+  /* Custom sleek dark scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0B0B0C;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #27272A;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FF9900;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
