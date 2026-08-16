@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect } from "react";
+import React, { createContext, useContext, useEffect, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { NEXT_PUBLIC_SMARTLINK_URL } from "@/lib/constants";
 
@@ -16,18 +16,24 @@ export function useSmartlink() {
   return context;
 }
 
-export function AdProvider({ children }: { children: React.ReactNode }) {
+function AdTrackerInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  // Track route changes for potential ad re-injections or analytics
   useEffect(() => {
     // In a real implementation, you might notify the ad network of a pageview
     // console.log("Route changed, AdProvider tracking:", pathname, searchParams.toString());
   }, [pathname, searchParams]);
 
+  return null;
+}
+
+export function AdProvider({ children }: { children: React.ReactNode }) {
   return (
     <AdContext.Provider value={{ smartlinkUrl: NEXT_PUBLIC_SMARTLINK_URL }}>
+      <Suspense fallback={null}>
+        <AdTrackerInner />
+      </Suspense>
       {children}
     </AdContext.Provider>
   );
