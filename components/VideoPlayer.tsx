@@ -28,11 +28,10 @@ export function VideoPlayer({ clip }: { clip: VideoClip }) {
         title={`${clip.title} — clip player`}
         loading="lazy"
         className="absolute inset-0 h-full w-full"
-        // Locked-down sandbox: allow only what's required to play video +
-        // go fullscreen. No same-origin, no top-navigation, no popups.
-        sandbox="allow-scripts allow-presentation"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-        referrerPolicy="strict-origin-when-cross-origin"
+        // Locked-down sandbox configured for external video partners
+        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+        allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+        referrerPolicy="no-referrer"
         allowFullScreen
       />
     </div>

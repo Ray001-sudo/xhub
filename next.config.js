@@ -49,7 +49,7 @@ const SCRIPT_SRC = [...new Set([...AD_SCRIPT_HOSTS, ...ENV_SCRIPT_SRC])];
 const CSP = [
   `default-src 'self'`,
   `base-uri 'self'`,
-  `frame-src 'self' ${CLIP_EMBED_HOSTS.join(" ")}`.trim(),
+  `frame-src 'self' https://www.eporner.com https://eporner.com https://*.eporner.com ${CLIP_EMBED_HOSTS.join(" ")}`.trim(),
   `img-src 'self' data: ${CLIP_IMAGE_HOSTS.join(" ")}`,
   `style-src 'self' 'unsafe-inline'`,
   `script-src 'self' 'unsafe-inline' ${SCRIPT_SRC.join(" ")}`,

@@ -38,7 +38,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
   const jsonLd = generateVideoObjectSchema(clip);
 
   return (
-    <div className="flex flex-col gap-6 py-4">
+    <div className="flex flex-col gap-8 max-w-7xl mx-auto px-4 py-6 w-full">
       {/* Schema.org VideoObject JSON-LD Injection */}
       <script
         type="application/ld+json"
@@ -56,11 +56,10 @@ export default async function WatchPage({ params }: WatchPageProps) {
         <AutoplayToggle />
       </div>
 
-      {/* Main Layout Grid: Player + Sidebars + Recommended Rail */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-        {/* Left Column: Player & Metadata */}
+      {/* Main Layout: Player Stack */}
+      <div className="flex flex-col gap-8 w-full">
+        {/* Top Section: Player & Metadata */}
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-4 xl:flex-row xl:items-start">
 
             {/* Video Player */}
             <div className="min-w-0 flex-1 flex flex-col gap-4">
@@ -102,11 +101,10 @@ export default async function WatchPage({ params }: WatchPageProps) {
                 </div>
               )}
             </div>
-          </div>
         </div>
 
-        {/* Recommended Videos Sidebar (Desktop 2-column or Mobile grid) */}
-        <aside className="flex flex-col gap-3">
+        {/* Recommended Videos Grid */}
+        <section className="flex flex-col gap-4 mt-6">
           <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
             <h2 className="text-sm font-extrabold uppercase tracking-wider text-white flex items-center gap-1.5">
               <span className="h-2.5 w-2.5 rounded-full bg-[#FF9900]" />
@@ -115,9 +113,13 @@ export default async function WatchPage({ params }: WatchPageProps) {
           </div>
 
           <div>
-            <VideoGrid items={related} />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-2">
+              {related.map((clip, i) => (
+                <VideoCard key={clip.id} clip={clip} priority={i < 6} />
+              ))}
+            </div>
           </div>
-        </aside>
+        </section>
       </div>
     </div>
   );
