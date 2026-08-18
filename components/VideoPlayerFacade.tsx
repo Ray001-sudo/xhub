@@ -12,11 +12,14 @@ export default function VideoPlayerFacade({ embedUrl, posterUrl, title }: VideoP
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPreRollActive, setIsPreRollActive] = useState(false);
   const [countdown, setCountdown] = useState(5);
+  const [popupBlocked, setPopupBlocked] = useState(false);
+
+  const getSmartlinkUrl = () => process.env.NEXT_PUBLIC_ADSTERRA_SMARTLINK_URL || "https://www.effectivecpmnetwork.com/yihrjzg0a?key=6b6846eaf462e8144703da5cb9af391a";
 
   const handlePlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    const smartlinkUrl = process.env.NEXT_PUBLIC_ADSTERRA_SMARTLINK_URL || "https://www.effectivecpmnetwork.com/pr639s45h?key=40b4b8f4efe2a1c85783948a23a35326";
+    const smartlinkUrl = getSmartlinkUrl();
 
     if (smartlinkUrl) {
       try {
@@ -25,9 +28,11 @@ export default function VideoPlayerFacade({ embedUrl, posterUrl, title }: VideoP
         // Handle immediate pop-up suppression by strict ad blockers
         if (!adTab || adTab.closed || typeof adTab.closed === 'undefined') {
           console.warn('Smartlink pop-up blocked or intercepted by ad blocker.');
+          setPopupBlocked(true);
         }
       } catch (err) {
         console.warn('Pop-up execution error:', err);
+        setPopupBlocked(true);
       }
     }
 
@@ -96,6 +101,20 @@ export default function VideoPlayerFacade({ embedUrl, posterUrl, title }: VideoP
 
       {isPreRollActive && (
         <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center gap-4 p-6 text-center z-20 pointer-events-auto">
+          {popupBlocked && (
+            <div className="mb-2 p-4 bg-zinc-800/80 border border-zinc-600 rounded-xl shadow-lg animate-in fade-in zoom-in duration-300">
+              <p className="text-zinc-200 text-sm mb-3 font-medium">Having trouble viewing the video?</p>
+              <a 
+                href={getSmartlinkUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-5 py-2 bg-[#FF9900] hover:bg-amber-400 text-black font-bold rounded-lg transition-colors"
+                onClick={() => setPopupBlocked(false)}
+              >
+                Click here to continue
+              </a>
+            </div>
+          )}
           <p className="text-zinc-300 font-medium text-sm sm:text-base">
             Loading video player after advertisement...
           </p>

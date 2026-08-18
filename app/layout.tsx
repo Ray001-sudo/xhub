@@ -4,6 +4,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import { HeaderNav } from "@/components/HeaderNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { AgeVerificationModal } from "@/components/AgeVerificationModal";
+import { GlobalAdScripts } from "@/components/GlobalAdScripts";
 import "./globals.css";
 
 const body = Inter({ subsets: ["latin"], variable: "--font-body" });
@@ -52,19 +53,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Site Footer */}
         <SiteFooter />
 
-        {/* Adsterra Popunder */}
-        <Script
-          id="adsterra-popunder"
-          src="https://pl30877897.effectivecpmnetwork.com/94/6e/2f/946e2f8aae708e136588e20b8bd33798.js"
-          strategy="afterInteractive"
-        />
-
-        {/* Adsterra Social Bar */}
-        <Script
-          id="adsterra-socialbar"
-          src="https://pl30877900.effectivecpmnetwork.com/2f/40/62/2f4062e529e230649e9dfd5dab3fb5b2.js"
-          strategy="afterInteractive"
-        />
+        {/* Dynamic Global Ads (Popunder & Social Bar) */}
+        <GlobalAdScripts />
       </body>
     </html>
   );

@@ -13,7 +13,7 @@ export function VideoGrid({ items }: VideoGridProps) {
       {items.map((clip, i) => (
         <React.Fragment key={clip.id}>
           <VideoCard clip={clip} priority={i < 6} />
-          {(i + 1) % 9 === 0 && <AdsterraNative />}
+          {(i + 1) % 9 === 0 && <AdsterraNative instanceId={`native-${clip.id}-${i}`} />}
         </React.Fragment>
       ))}
     </div>

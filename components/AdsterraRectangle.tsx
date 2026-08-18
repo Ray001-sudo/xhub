@@ -1,37 +1,42 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-
 export default function AdsterraRectangle() {
-  const adRef = useRef<HTMLDivElement>(null);
-  const [isBlocked, setIsBlocked] = useState(false);
-
-  useEffect(() => {
-    if (!adRef.current || adRef.current.childElementCount > 0) return;
-
-    (window as any).atOptions = {
-      key: '2ff57a74a041dca59c83132a424444cc',
-      format: 'iframe',
-      height: 250,
-      width: 300,
-      params: {},
-    };
-
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://www.highperformanceformat.com/2ff57a74a041dca59c83132a424444cc/invoke.js';
-    script.async = true;
-
-    script.onerror = () => setIsBlocked(true);
-
-    adRef.current.appendChild(script);
-  }, []);
-
-  if (isBlocked) return null;
+  const iframeSrcDoc = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <style>
+          body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; overflow: hidden; background: transparent; }
+        </style>
+      </head>
+      <body>
+        <script>
+          atOptions = {
+            'key' : '5ef8b9c19845cd59aff1af47af7491a2',
+            'format' : 'iframe',
+            'height' : 250,
+            'width' : 300,
+            'params' : {}
+          };
+        </script>
+        <script src="https://www.highperformanceformat.com/5ef8b9c19845cd59aff1af47af7491a2/invoke.js"></script>
+      </body>
+    </html>
+  `;
 
   return (
     <div className="w-full flex justify-center items-center my-6">
-      <div ref={adRef} className="w-[300px] h-[250px] bg-zinc-900/40 rounded-lg flex items-center justify-center overflow-hidden border border-zinc-800" />
+      <div className="w-[300px] h-[250px] bg-zinc-900/40 rounded-lg overflow-hidden border border-zinc-800">
+        <iframe
+          title="Advertisement"
+          width="300"
+          height="250"
+          style={{ border: 'none', overflow: 'hidden' }}
+          scrolling="no"
+          sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox allow-same-origin"
+          srcDoc={iframeSrcDoc}
+        />
+      </div>
     </div>
   );
 }
