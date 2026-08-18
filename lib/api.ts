@@ -268,7 +268,7 @@ export async function getRelatedClips(tags: string[], excludeSlug: string): Prom
   try {
     const data = await apiFetch<EpornerSearchResponse>("/video/search/", {
       query: tags.slice(0, 2).join(" "),
-      per_page: 30,
+      per_page: 60,
       order: "most-popular",
       thumbsize: "medium",
       gay: 0,

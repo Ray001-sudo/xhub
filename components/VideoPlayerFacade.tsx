@@ -101,20 +101,6 @@ export default function VideoPlayerFacade({ embedUrl, posterUrl, title }: VideoP
 
       {isPreRollActive && (
         <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center gap-4 p-6 text-center z-20 pointer-events-auto">
-          {popupBlocked && (
-            <div className="mb-2 p-4 bg-zinc-800/80 border border-zinc-600 rounded-xl shadow-lg animate-in fade-in zoom-in duration-300">
-              <p className="text-zinc-200 text-sm mb-3 font-medium">Having trouble viewing the video?</p>
-              <a 
-                href={getSmartlinkUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block px-5 py-2 bg-[#FF9900] hover:bg-amber-400 text-black font-bold rounded-lg transition-colors"
-                onClick={() => setPopupBlocked(false)}
-              >
-                Click here to continue
-              </a>
-            </div>
-          )}
           <p className="text-zinc-300 font-medium text-sm sm:text-base">
             Loading video player after advertisement...
           </p>
