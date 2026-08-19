@@ -1,12 +1,12 @@
 "use client";
 
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
-import type { SortOption, VideoClip } from "@/lib/types";
+import type { SortOption, GridVideoClip } from "@/lib/types";
 import { GameCardSkeleton } from "./Skeletons";
 import { VideoGrid } from "./VideoGrid";
 
 interface InfiniteCatalogGridProps {
-  initialItems: VideoClip[];
+  initialItems: GridVideoClip[];
   initialHasNextPage: boolean;
   search: string;
   tag: string;
@@ -20,7 +20,7 @@ export function InfiniteCatalogGrid({
   tag,
   sort,
 }: InfiniteCatalogGridProps) {
-  const [items, setItems] = useState<VideoClip[]>(initialItems);
+  const [items, setItems] = useState<GridVideoClip[]>(initialItems);
   const [page, setPage] = useState(1);
   const [hasNextPage, setHasNextPage] = useState(initialHasNextPage);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,7 +49,7 @@ export function InfiniteCatalogGrid({
       });
       const res = await fetch(`/api/search?${params.toString()}`);
       if (!res.ok) throw new Error("Failed to load more videos");
-      const data: { items: VideoClip[]; hasNextPage: boolean } = await res.json();
+      const data: { items: GridVideoClip[]; hasNextPage: boolean } = await res.json();
       setItems((prev) => [...prev, ...data.items]);
       setHasNextPage(data.hasNextPage);
       setPage(nextPage);

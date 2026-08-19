@@ -198,6 +198,19 @@ function normalizeClip(raw: EpornerVideoRaw): VideoClip {
   };
 }
 
+function normalizeGridClip(raw: EpornerVideoRaw): import("./types").GridVideoClip {
+  return {
+    id: raw.id,
+    slug: slugify(raw.title, raw.id),
+    title: raw.title,
+    thumbnailUrl: raw.default_thumb?.src || "",
+    duration: formatDuration(raw.length_sec),
+    rating: raw.rate ? `${raw.rate}%` : "",
+    views: raw.views,
+    tags: raw.keywords ? raw.keywords.split(",").map((k) => k.trim()).filter(Boolean).slice(0, 1) : [],
+  };
+}
+
 // -----------------------------------------------------------------------------
 // Public service API — this is what pages/components import.
 // -----------------------------------------------------------------------------
@@ -227,7 +240,7 @@ export async function getCatalog(query: CatalogQuery): Promise<CatalogResult> {
       format: "json",
     });
 
-    const items = (data.videos || []).map(normalizeClip);
+    const items = (data.videos || []).map(normalizeGridClip);
     return {
       items,
       page,
@@ -263,7 +276,7 @@ export async function getClipBySlug(slug: string): Promise<VideoClip | null> {
 }
 
 /** Related clips for the "More Clips" grid on the watch page. */
-export async function getRelatedClips(tags: string[], excludeSlug: string): Promise<VideoClip[]> {
+export async function getRelatedClips(tags: string[], excludeSlug: string): Promise<import("./types").GridVideoClip[]> {
   if (tags.length === 0) return [];
   try {
     const data = await apiFetch<EpornerSearchResponse>("/video/search/", {
@@ -276,7 +289,7 @@ export async function getRelatedClips(tags: string[], excludeSlug: string): Prom
       format: "json",
     });
     return (data.videos || [])
-      .map(normalizeClip)
+      .map(normalizeGridClip)
       .filter((c) => c.slug !== excludeSlug);
   } catch (err) {
     console.error("[clips-api] getRelatedClips failed:", err);

@@ -23,6 +23,6 @@ export async function GET(request: NextRequest) {
 
   return NextResponse.json(
     { items: result.items, hasNextPage: result.hasNextPage },
-    { headers: { "Cache-Control": "public, max-age=60, stale-while-revalidate=300" } }
+    { headers: { "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400" } }
   );
 }

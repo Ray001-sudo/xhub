@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 
+import Image from 'next/image';
+
 interface VideoPlayerFacadeProps {
   embedUrl: string;
   posterUrl: string;
@@ -78,10 +80,13 @@ export default function VideoPlayerFacade({ embedUrl, posterUrl, title }: VideoP
       onClick={!isPreRollActive ? handlePlayClick : undefined}
       className="relative w-full aspect-video rounded-xl overflow-hidden bg-zinc-900 border border-zinc-800 group cursor-pointer select-none"
     >
-      <img 
+      <Image 
         src={posterUrl} 
         alt={title} 
-        className="w-full h-full object-cover pointer-events-none" 
+        fill
+        unoptimized={true}
+        sizes="(max-width: 1536px) 100vw, 1536px"
+        className="object-cover pointer-events-none" 
       />
 
       {!isPreRollActive && (

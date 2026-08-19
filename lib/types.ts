@@ -45,6 +45,8 @@ export interface VideoClip {
   slug: string;
 }
 
+export type GridVideoClip = Omit<VideoClip, "embedHtml" | "embedUrl">;
+
 export type SortOption = "popular" | "newest" | "top-rated" | "alphabetical";
 
 export interface CatalogQuery {
@@ -56,7 +58,7 @@ export interface CatalogQuery {
 }
 
 export interface CatalogResult {
-  items: VideoClip[];
+  items: GridVideoClip[];
   page: number;
   pageSize: number;
   totalCount: number;

@@ -9,7 +9,7 @@ import { VideoCard } from "@/components/VideoCard";
 import { TagCloud } from "@/components/TagCloud";
 import { AutoplayToggle } from "@/components/AutoplayToggle";
 import { VideoGrid } from "@/components/VideoGrid";
-import AdsterraRectangle from "@/components/AdsterraRectangle";
+import { AdsterraRectangleDynamic } from "@/components/AdsterraRectangleDynamic";
 
 export const revalidate = 3600;
 
@@ -113,7 +113,7 @@ export default async function WatchPage({ params }: WatchPageProps) {
         </div>
         
         {/* Adsterra Rectangle Ad */}
-        <AdsterraRectangle />
+        <AdsterraRectangleDynamic />
 
         {/* Recommended Videos Grid */}
         <section className="flex flex-col gap-4 mt-6">

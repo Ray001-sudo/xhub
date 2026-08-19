@@ -1,10 +1,10 @@
 import React from "react";
-import type { VideoClip } from "@/lib/types";
+import type { VideoClip, GridVideoClip } from "@/lib/types";
 import { VideoCard } from "./VideoCard";
-import AdsterraNative from "./AdsterraNative";
+import { AdsterraNativeDynamic } from './AdsterraNativeDynamic';
 
 interface VideoGridProps {
-  items: VideoClip[];
+  items: GridVideoClip[] | VideoClip[];
 }
 
 export function VideoGrid({ items }: VideoGridProps) {
@@ -13,7 +13,7 @@ export function VideoGrid({ items }: VideoGridProps) {
       {items.map((clip, i) => (
         <React.Fragment key={clip.id}>
           <VideoCard clip={clip} priority={i < 6} />
-          {(i + 1) % 9 === 0 && <AdsterraNative instanceId={`native-${clip.id}-${i}`} />}
+          {(i + 1) % 9 === 0 && <AdsterraNativeDynamic instanceId={`native-${clip.id}-${i}`} />}
         </React.Fragment>
       ))}
     </div>
