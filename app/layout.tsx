@@ -10,7 +10,7 @@ import "./globals.css";
 const body = Inter({ subsets: ["latin"], variable: "--font-body" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://xvideoz.dpdns.org";
+const SITE_URL = "https://xvideoz.dpdns.org";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
