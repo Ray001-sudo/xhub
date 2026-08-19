@@ -3,7 +3,7 @@ import type { VideoClip } from "./types";
 import { toIso8601Duration } from "./utils";
 
 const SITE_NAME = "XHub HD";
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://xhub-hd.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://xvideoz.dpdns.org";
 
 export function generateCanonicalUrl(path: string): string {
   const cleanPath = path.startsWith("/") ? path : `/${path}`;

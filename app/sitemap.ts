@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllSlugsForSitemap } from "@/lib/api";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://xvideoz.dpdns.org";
 
 // Regenerates alongside the rest of the ISR-cached content.
 export const revalidate = 3600;

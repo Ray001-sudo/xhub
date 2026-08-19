@@ -32,6 +32,27 @@ export async function generateMetadata({ searchParams }: CatalogPageProps): Prom
     alternates: {
       canonical: `/catalog${tag ? `?tag=${encodeURIComponent(tag)}` : ""}`,
     },
+    openGraph: {
+      title,
+      description: `Watch free ${tag ? `${tag} ` : ""}HD videos on XHub HD. Ultra-fast high-density catalog, sorted by popularity, recency, and ratings.`,
+      url: `/catalog${tag ? `?tag=${encodeURIComponent(tag)}` : ""}`,
+      type: "website",
+      siteName: "XHub HD",
+      images: [
+        {
+          url: "/og-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: `Watch free ${tag ? `${tag} ` : ""}HD videos on XHub HD. Ultra-fast high-density catalog, sorted by popularity, recency, and ratings.`,
+      images: ["/og-image.jpg"],
+    },
   };
 }
 

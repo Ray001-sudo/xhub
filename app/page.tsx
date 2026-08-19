@@ -9,6 +9,30 @@ export const metadata: Metadata = {
   title: "XHub HD — Free HD Adult Videos & High-Density Media Site",
   description:
     "Watch thousands of free high-quality HD adult videos on XHub HD. Ultra-dense grid, fast streaming, interactive frame previews, and no sign-up required.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "XHub HD — Free HD Adult Videos & High-Density Media Site",
+    description: "Watch thousands of free high-quality HD adult videos on XHub HD. Ultra-dense grid, fast streaming, interactive frame previews, and no sign-up required.",
+    url: "/",
+    type: "website",
+    siteName: "XHub HD",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "XHub HD",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "XHub HD — Free HD Adult Videos & High-Density Media Site",
+    description: "Watch thousands of free high-quality HD adult videos on XHub HD. Ultra-dense grid, fast streaming, interactive frame previews, and no sign-up required.",
+    images: ["/og-image.jpg"],
+  },
 };
 
 export const revalidate = 3600;

@@ -10,7 +10,7 @@ import "./globals.css";
 const body = Inter({ subsets: ["latin"], variable: "--font-body" });
 const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://xhub-hd.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://xvideoz.dpdns.org";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -23,9 +23,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "XHub HD",
+    title: "XHub HD — Free High-Density Adult Media Portal",
+    description: "Watch thousands of high-definition videos for free on XHub HD. Ultra-fast playback, high retention catalog, and no account required.",
     url: SITE_URL,
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "XHub HD",
+      },
+    ],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { 
+    card: "summary_large_image",
+    title: "XHub HD — Free High-Density Adult Media Portal",
+    description: "Watch thousands of high-definition videos for free on XHub HD. Ultra-fast playback, high retention catalog, and no account required.",
+    images: ["/og-image.jpg"],
+  },
   robots: { index: true, follow: true },
 };
 
@@ -39,6 +54,22 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://www.eporner.com" crossOrigin="anonymous" />
       </head>
       <body className="min-h-screen bg-[#0B0B0C] font-body text-white antialiased flex flex-col selection:bg-[#FF9900] selection:text-black">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "XHub HD",
+              url: SITE_URL,
+              potentialAction: {
+                "@type": "SearchAction",
+                target: `${SITE_URL}/catalog?q={search_term_string}`,
+                "query-input": "required name=search_term_string",
+              },
+            }),
+          }}
+        />
         {/* Zero-CLS Age Verification Gate Modal */}
         <AgeVerificationModal />
 
