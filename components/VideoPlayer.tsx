@@ -44,6 +44,7 @@ export function VideoPlayer({ clip }: { clip: VideoClip }) {
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             priority
+            unoptimized={true}
             sizes="(max-width: 1700px) 100vw, 1700px"
           />
           <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />

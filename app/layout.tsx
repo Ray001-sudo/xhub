@@ -56,7 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="dns-prefetch" href="https://www.eporner.com" />
         <link rel="preconnect" href="https://www.eporner.com" crossOrigin="anonymous" />
       </head>
-      <body className="min-h-screen bg-[#0B0B0C] font-body text-white antialiased flex flex-col selection:bg-[#FF9900] selection:text-black">
+      <body suppressHydrationWarning className="min-h-screen bg-[#0B0B0C] font-body text-white antialiased flex flex-col selection:bg-[#FF9900] selection:text-black">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -71,6 +71,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 "query-input": "required name=search_term_string",
               },
             }),
+          }}
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (!localStorage.getItem('age_verified') || localStorage.getItem('age_verified') !== 'true') {
+                  document.body.classList.add('modal-open');
+                }
+              } catch (e) {}
+            `,
           }}
         />
         {/* Zero-CLS Age Verification Gate Modal */}

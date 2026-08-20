@@ -49,7 +49,7 @@ export default function AdsterraRectangle() {
             'params' : {}
           };
         </script>
-        <script src="https://www.highperformanceformat.com/5ef8b9c19845cd59aff1af47af7491a2/invoke.js" onerror="window.parent.postMessage({ type: 'adsterra-blocked' }, '*')"></script>
+        <script async defer src="https://www.highperformanceformat.com/5ef8b9c19845cd59aff1af47af7491a2/invoke.js" onerror="window.parent.postMessage({ type: 'adsterra-blocked' }, '*')"></script>
       </body>
     </html>
   `;

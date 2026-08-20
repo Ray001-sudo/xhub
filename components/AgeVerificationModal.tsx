@@ -10,7 +10,6 @@ export function AgeVerificationModal() {
     const verified = localStorage.getItem("age_verified");
     if (!verified || verified !== "true") {
       setIsOpen(true);
-      document.body.classList.add("modal-open");
     }
   }, []);
 
