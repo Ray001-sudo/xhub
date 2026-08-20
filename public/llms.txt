@@ -1,0 +1,11 @@
+# XHub HD
+
+> XHub HD is a high-density media directory providing free access to a large catalog of high-definition streaming video content.
+
+This site is built as a fast, highly optimized portal allowing users to browse, search, and save videos locally without requiring user accounts or registration.
+
+## Site Structure
+
+- [Home](https://xvideoz.dpdns.org/): The main landing page featuring new releases, popular videos, and trending categories.
+- [Catalog](https://xvideoz.dpdns.org/catalog): The complete, searchable video directory with infinite scrolling, pagination, and filtering options.
+- [Favorites](https://xvideoz.dpdns.org/favorites): A local, browser-based library where users can save and revisit their preferred videos without requiring an account.
