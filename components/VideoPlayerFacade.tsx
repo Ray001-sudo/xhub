@@ -16,7 +16,7 @@ export default function VideoPlayerFacade({ embedUrl, posterUrl, title }: VideoP
   const [countdown, setCountdown] = useState(5);
   const [popupBlocked, setPopupBlocked] = useState(false);
 
-  const getSmartlinkUrl = () => process.env.NEXT_PUBLIC_ADSTERRA_SMARTLINK_URL || "https://www.effectivecpmnetwork.com/yihrjzg0a?key=6b6846eaf462e8144703da5cb9af391a";
+  const getSmartlinkUrl = () => process.env.NEXT_PUBLIC_ADSTERRA_SMARTLINK_URL || "https://www.effectivecpmnetwork.com/sw0gxjtd?key=5d91e60c0890598a5f09b65dd893a854";
 
   const handlePlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();

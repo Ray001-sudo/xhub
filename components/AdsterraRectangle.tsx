@@ -42,14 +42,14 @@ export default function AdsterraRectangle() {
       <body>
         <script>
           atOptions = {
-            'key' : '5ef8b9c19845cd59aff1af47af7491a2',
+            'key' : 'e1b916236319b86131a6a333ad46f34e',
             'format' : 'iframe',
             'height' : 250,
             'width' : 300,
             'params' : {}
           };
         </script>
-        <script async defer src="https://www.highperformanceformat.com/5ef8b9c19845cd59aff1af47af7491a2/invoke.js" onerror="window.parent.postMessage({ type: 'adsterra-blocked' }, '*')"></script>
+        <script async defer src="https://www.highperformanceformat.com/e1b916236319b86131a6a333ad46f34e/invoke.js" onerror="window.parent.postMessage({ type: 'adsterra-blocked' }, '*')"></script>
       </body>
     </html>
   `;

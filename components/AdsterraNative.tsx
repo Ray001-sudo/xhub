@@ -21,7 +21,7 @@ export default function AdsterraNative({ instanceId }: AdsterraNativeProps) {
         
         // srcDoc has the container div and the script (2 elements in body)
         // If ad loads, the container div will have children inside it.
-        const container = doc.getElementById('container-fe01bc3006e6efa34119cb83f1f49201');
+        const container = doc.getElementById('container-7ebc6c19e8b4e0768d1d0cd076c77b3e');
         if (!container || container.children.length === 0) {
           setIsBlocked(true);
         }
@@ -42,8 +42,8 @@ export default function AdsterraNative({ instanceId }: AdsterraNativeProps) {
         </style>
       </head>
       <body>
-        <div id="container-fe01bc3006e6efa34119cb83f1f49201"></div>
-        <script async="async" data-cfasync="false" src="https://pl30903654.effectivecpmnetwork.com/fe01bc3006e6efa34119cb83f1f49201/invoke.js" onerror="window.parent.postMessage({ type: 'adsterra-native-blocked' }, '*')"></script>
+        <div id="container-7ebc6c19e8b4e0768d1d0cd076c77b3e"></div>
+        <script async="async" data-cfasync="false" src="https://pl30937412.effectivecpmnetwork.com/7ebc6c19e8b4e0768d1d0cd076c77b3e/invoke.js" onerror="window.parent.postMessage({ type: 'adsterra-native-blocked' }, '*')"></script>
       </body>
     </html>
   `;
