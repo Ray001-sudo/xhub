@@ -3,13 +3,8 @@ import Script from "next/script";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { HeaderNav } from "@/components/HeaderNav";
 import { SiteFooter } from "@/components/SiteFooter";
+import AgeVerificationModalLoader from "@/components/AgeVerificationModalLoader";
 import { GlobalAdScripts } from "@/components/GlobalAdScripts";
-import dynamic from "next/dynamic";
-
-const AgeVerificationModal = dynamic(
-  () => import("@/components/AgeVerificationModal").then((mod) => mod.AgeVerificationModal),
-  { ssr: false }
-);
 import "./globals.css";
 
 const body = Inter({ subsets: ["latin"], variable: "--font-body" });
@@ -79,7 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         {/* Zero-CLS Age Verification Gate Modal */}
-        <AgeVerificationModal />
+        <AgeVerificationModalLoader />
 
         {/* Global Navigation Bar */}
         <HeaderNav />
