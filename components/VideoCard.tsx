@@ -11,6 +11,7 @@ import { useFavorites } from "@/hooks/useFavorites";
 interface VideoCardProps {
   clip: GridVideoClip | VideoClip;
   priority?: boolean;
+  isLcp?: boolean;
 }
 
 const POSITIONS = [
@@ -21,7 +22,7 @@ const POSITIONS = [
   "object-right",
 ];
 
-export function VideoCard({ clip, priority = false }: VideoCardProps) {
+export function VideoCard({ clip, priority = false, isLcp = false }: VideoCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [frameIndex, setFrameIndex] = useState(0);
   const { isFavorite, toggleFavorite, isLoaded } = useFavorites();
@@ -87,6 +88,7 @@ export function VideoCard({ clip, priority = false }: VideoCardProps) {
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, (max-width: 1536px) 20vw, 16vw"
             loading={priority ? "eager" : "lazy"}
+            priority={isLcp}
             unoptimized={true}
             className={`object-cover transition-transform duration-500 ease-out ${
               POSITIONS[frameIndex]

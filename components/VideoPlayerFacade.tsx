@@ -84,6 +84,7 @@ export default function VideoPlayerFacade({ embedUrl, posterUrl, title }: VideoP
         src={posterUrl} 
         alt={title} 
         fill
+        priority={true}
         unoptimized={true}
         sizes="(max-width: 1536px) 100vw, 1536px"
         className="object-cover pointer-events-none" 
